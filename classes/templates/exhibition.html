@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head(${campus.name})}"></head>
+<body data-page="exhibition" th:style="'--accent:' + ${campus.accent}">
+
+<div th:replace="~{fragments/layout :: doors}"></div>
+<div th:replace="~{fragments/layout :: navbar('exhibitions')}"></div>
+
+<!-- Hallway indicator: which room am I in? -->
+<nav class="hallway" aria-label="Exhibition rooms">
+    <a class="hallway__lobby" th:href="@{/}" data-room data-label="Museum Lobby">← Return to Lobby</a>
+    <ol>
+        <li th:each="c, it : ${campuses}">
+            <a th:href="@{/exhibition/{s}(s=${c.slug})}" data-room
+               th:attr="data-label=${c.name},aria-current=${c.slug == campus.slug ? 'page' : null}"
+               th:classappend="${c.slug == campus.slug} ? 'is-current'">
+                <b th:text="${it.count}">1</b><span th:text="${c.town}">Town</span>
+            </a>
+        </li>
+    </ol>
+</nav>
+
+<main>
+    <!-- =============== A. HISTORICAL INTRODUCTION (museum wall) =============== -->
+    <section class="room-hero">
+        <div class="room-hero__bg" data-parallax aria-hidden="true"></div>
+        <div class="room-hero__inner">
+            <p class="eyebrow" data-split th:text="'Room ' + ${roomNumber} + ' of 4 · ' + ${campus.flagship}">Room 1</p>
+            <h1 class="display" data-split th:text="${campus.name}">LSPU Siniloan</h1>
+            <p class="lead reveal" th:text="${campus.tagline}">Tagline</p>
+        </div>
+    </section>
+
+    <section class="section wall">
+        <div class="plaque reveal">
+            <dl>
+                <div><dt>Campus</dt><dd th:text="${campus.name}"></dd></div>
+                <div><dt>Location</dt><dd th:text="${campus.locationLabel}"></dd></div>
+                <div><dt>Founding year</dt><dd><span th:text="${campus.foundingYear}"></span></dd></div>
+                <div><dt>Banner program</dt><dd th:text="${campus.flagship}"></dd></div>
+            </dl>
+            <p class="plaque__note" th:text="${campus.foundingNote}"></p>
+        </div>
+        <div class="wall__text">
+            <p class="lead reveal" th:text="${campus.intro}"></p>
+            <p class="reveal" th:each="p : ${campus.history.background}" th:text="${p}"></p>
+            <div class="reveal" th:if="${!campus.history.formerNames.isEmpty()}">
+                <h3 class="small-title">Names through the years</h3>
+                <ul class="names"><li th:each="n : ${campus.history.formerNames}" th:text="${n}"></li></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============== B. INTERACTIVE TIMELINE =============== -->
+    <section class="section section--dark" id="timeline">
+        <header class="section__head">
+            <p class="eyebrow">Historical Timeline</p>
+            <h2 class="title">Milestones of the campus</h2>
+        </header>
+        <div class="tl" id="timelineWidget">
+            <div class="tl__track" role="tablist" aria-label="Timeline years">
+                <span class="tl__progress" id="tlProgress"></span>
+                <button th:each="ev, it : ${events}" class="tl__dot" type="button" role="tab"
+                        th:attr="data-index=${it.index},aria-selected=${it.first}"
+                        th:classappend="${it.first} ? 'is-active'">
+                    <span class="tl__year" th:text="${ev.year}">1952</span>
+                </button>
+            </div>
+            <div class="tl__stage" aria-live="polite">
+                <article th:each="ev, it : ${events}" class="tl__card" th:classappend="${it.first} ? 'is-active'" th:attr="data-index=${it.index}">
+                    <p class="eyebrow" th:text="${ev.dateLabel}">1952</p>
+                    <h3 th:text="${ev.title}">Title</h3>
+                    <p th:text="${ev.description}">Description</p>
+                    <p class="source">Source: <span th:text="${ev.source}"></span>
+                        <strong th:if="${ev.needsVerification}" class="flag">Needs verification</strong></p>
+                </article>
+            </div>
+            <div class="tl__controls">
+                <button class="btn btn--ghost" type="button" id="tlPrev">← Earlier</button>
+                <span id="tlCount">1 / 1</span>
+                <button class="btn btn--ghost" type="button" id="tlNext">Later →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============== C. PHOTOGRAPH GALLERY =============== -->
+    <section class="section" id="gallery">
+        <header class="section__head">
+            <p class="eyebrow">Photograph Gallery</p>
+            <h2 class="title">Framed exhibits</h2>
+        </header>
+        <div class="gallery" id="gallery-grid">
+            <figure th:each="img, it : ${campus.images}" class="frame reveal" th:classappend="${it.first} ? 'frame--wide'">
+                <button type="button" class="frame__btn"
+                        th:attr="data-index=${it.index},data-title=${img.title},data-desc=${img.description},data-kind=${img.kind},data-credit=${img.credit},data-src=${img.available} ? @{${img.url}} : ''">
+                    <div class="frame__mat">
+                        <img th:if="${img.available}" th:src="@{${img.url}}" th:alt="${img.title} + ' — ' + ${campus.name}" loading="lazy">
+                        <div th:unless="${img.available}" class="frame__empty">
+                            <span>Photograph pending</span>
+                            <small th:text="${img.fileName}">file.jpg</small>
+                        </div>
+                    </div>
+                    <figcaption><b th:text="${img.title}"></b><small th:text="${img.kind}"></small></figcaption>
+                </button>
+            </figure>
+        </div>
+        <p class="note">Only real, credited photographs are shown. Add files named as shown on each frame to
+            <code th:text="'static/images/campuses/' + ${campus.slug} + '/'"></code> and they appear automatically.
+            (<span th:text="${campus.availableImageCount}">0</span> of <span th:text="${campus.images.size()}">5</span> in place.)</p>
+    </section>
+
+    <!-- =============== D. MAJOR CONTRIBUTIONS =============== -->
+    <section class="section section--tint">
+        <header class="section__head">
+            <p class="eyebrow">Major Contributions</p>
+            <h2 class="title">Achievements on display</h2>
+        </header>
+        <div class="panels">
+            <article class="panel reveal" th:each="item, it : ${campus.contributions}">
+                <span class="panel__no" th:text="${#numbers.formatInteger(it.count, 2)}">01</span>
+                <p th:text="${item}"></p>
+            </article>
+        </div>
+    </section>
+
+    <!-- =============== E. ACADEMIC INFORMATION =============== -->
+    <section class="section">
+        <header class="section__head">
+            <p class="eyebrow">Academic Information</p>
+            <h2 class="title">Programs and colleges</h2>
+        </header>
+        <ul class="programs">
+            <li class="reveal" th:each="p : ${campus.programs}" th:text="${p}"></li>
+        </ul>
+    </section>
+
+    <!-- Research gaps stay visible: honesty is part of the exhibit -->
+    <section class="section section--note">
+        <h3 class="small-title">Curator’s notes — still to be researched</h3>
+        <ul class="gaps"><li th:each="n : ${campus.history.needsResearch}" th:text="${n}"></li></ul>
+    </section>
+
+    <!-- =============== WALKING EXPERIENCE: previous / next room =============== -->
+    <nav class="rooms-nav" aria-label="Move to another room">
+        <a th:href="@{/exhibition/{s}(s=${prev.slug})}" data-room th:attr="data-label=${prev.name}" class="rooms-nav__a">
+            <small>← Previous room</small><b th:text="${prev.name}"></b>
+        </a>
+        <a th:href="@{/}" data-room data-label="Museum Lobby" class="rooms-nav__lobby">Return to the Lobby</a>
+        <a th:href="@{/exhibition/{s}(s=${next.slug})}" data-room th:attr="data-label=${next.name}" class="rooms-nav__a rooms-nav__a--next">
+            <small>Next room →</small><b th:text="${next.name}"></b>
+        </a>
+    </nav>
+</main>
+
+<!-- Cinematic lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photograph viewer" hidden>
+    <button class="lightbox__close" id="lbClose" aria-label="Close viewer">×</button>
+    <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Previous photograph">‹</button>
+    <figure class="lightbox__fig">
+        <div class="lightbox__img" id="lbImgWrap"><span class="spinner" id="lbSpin" hidden></span></div>
+        <figcaption>
+            <p class="eyebrow" id="lbKind"></p>
+            <h3 id="lbTitle"></h3>
+            <p id="lbDesc"></p>
+            <p class="source" id="lbCredit"></p>
+        </figcaption>
+    </figure>
+    <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Next photograph">›</button>
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Search')}"></head>
+<body data-page="search">
+<div th:replace="~{fragments/layout :: doors}"></div>
+<div th:replace="~{fragments/layout :: navbar('search')}"></div>
+
+<main>
+    <section class="room-hero room-hero--short">
+        <div class="room-hero__bg" aria-hidden="true"></div>
+        <div class="room-hero__inner">
+            <p class="eyebrow" data-split>The Archive</p>
+            <h1 class="display" data-split>Search the Collection</h1>
+        </div>
+    </section>
+
+    <section class="section">
+        <form class="bigsearch" th:action="@{/search}" method="get" role="search">
+            <label class="sr-only" for="q">Search</label>
+            <input id="q" name="q" type="search" maxlength="60" th:value="${q}" required
+                   placeholder="Campus, year, place or keyword"
+                   pattern="[\p{L}\p{N} .,'&amp;\-]{1,60}" title="Letters, numbers and spaces only (max 60)">
+            <button class="btn btn--gold" type="submit">Search</button>
+        </form>
+
+        <p class="alert" th:if="${!valid}">That search contains characters we do not accept. Use letters, numbers, spaces and . , ' &amp; - only (1–60 characters).</p>
+
+        <p class="note" th:if="${valid and q != ''}" th:text="${results.size()} + ' result(s) for “' + ${q} + '”'"></p>
+
+        <ul class="results">
+            <li class="result reveal" th:each="r : ${results}">
+                <p class="eyebrow" th:text="${r.kind} + ' · ' + ${r.campusName}"></p>
+                <h3><a th:href="@{/exhibition/{s}(s=${r.campusSlug})}" data-room th:text="${r.title}"></a></h3>
+                <p th:text="${r.snippet}"></p>
+            </li>
+        </ul>
+        <p th:if="${valid and q != '' and results.isEmpty()}" class="lead">Nothing matches that search yet. Try a campus name, a year such as 1983, or a word like “fisheries”.</p>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

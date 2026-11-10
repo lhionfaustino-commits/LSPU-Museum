@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('About Us')}"></head>
+<body data-page="about">
+<div th:replace="~{fragments/layout :: doors}"></div>
+<div th:replace="~{fragments/layout :: navbar('about')}"></div>
+
+<main class="about-page">
+    <section class="room-hero room-hero--short about-hero">
+        <div class="room-hero__bg" aria-hidden="true"></div>
+        <div class="room-hero__inner">
+            <p class="eyebrow" data-split>Behind the Collection</p>
+            <h1 class="display" data-split>About Us</h1>
+            <p class="lead reveal">Preserving the stories, milestones, and shared heritage of Laguna State Polytechnic University.</p>
+        </div>
+    </section>
+
+    <section class="section about-intro">
+        <div class="about-copy reveal">
+            <p class="eyebrow">The Virtual Museum</p>
+            <h2 class="title">A university story, kept alive.</h2>
+            <p class="lead">The LSPU Heritage Museum is a student-developed virtual space where visitors can explore the university's history through campus exhibitions, photographs, historical milestones, and collected information.</p>
+            <p>It brings the four regular campuses together in one accessible experience and encourages students, alumni, and visitors to appreciate the people and events that helped shape the institution.</p>
+        </div>
+        <aside class="about-fact reveal">
+            <span class="about-fact__year">1952</span>
+            <p>The year LSPU traces its beginnings to Baybay Provincial High School in Siniloan, Laguna.</p>
+            <a href="https://lspu.edu.ph/page/historical-development" target="_blank" rel="noopener">Read the university's historical development ↗</a>
+        </aside>
+    </section>
+
+    <section class="section section--tint about-purpose">
+        <div class="about-purpose__item reveal">
+            <p class="eyebrow">Our Purpose</p>
+            <h2 class="title">Why this museum exists</h2>
+            <p>To make LSPU history easier to discover, understand, and share through an engaging digital exhibition.</p>
+        </div>
+        <div class="about-purpose__item reveal">
+            <p class="eyebrow">Our Objectives</p>
+            <ul class="about-list">
+                <li>Present the university's history and campus milestones.</li>
+                <li>Organize historical information and credited photographs in one place.</li>
+                <li>Provide an interactive learning experience for students and visitors.</li>
+                <li>Promote appreciation of LSPU's institutional and local heritage.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section about-mvv">
+        <header class="section__head reveal">
+            <p class="eyebrow">Our Direction</p>
+            <h2 class="title">Mission &amp; Vision</h2>
+        </header>
+        <div class="about-mvv__grid">
+            <article class="about-mvv__card reveal">
+                <h3>Mission</h3>
+                <p>To preserve and present LSPU's history through reliable information, meaningful exhibits, and accessible digital storytelling.</p>
+            </article>
+            <article class="about-mvv__card reveal">
+                <h3>Vision</h3>
+                <p>To become a useful virtual heritage space that inspires every visitor to value the university's past and take part in its continuing story.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section section--dark about-team">
+        <div class="about-team__copy reveal">
+            <p class="eyebrow">The Project Team</p>
+            <h2 class="title">Meet the people behind the museum.</h2>
+            <p>This virtual museum is developed as an academic project by a team of six student developers. Together, the team brings research, design, and web development into one digital space for sharing LSPU heritage.</p>
+            <p class="about-team__note">Our goal is to make the university's stories easier to explore and appreciate.</p>
+        </div>
+        <div class="about-team__seal reveal" aria-hidden="true">
+            <span>L</span><small>HERITAGE<br>MUSEUM</small>
+        </div>
+    </section>
+
+    <section class="section about-developers" aria-labelledby="developers-title">
+        <header class="section__head reveal">
+            <p class="eyebrow">Our Developers</p>
+            <h2 class="title" id="developers-title">The six people behind the project</h2>
+            <p class="lead">Each portrait represents one member of the student development team.</p>
+        </header>
+        <div class="developer-grid">
+            <article class="developer-card reveal">
+                <div class="developer-card__photo"><img th:src="@{/images/developers/developer-1.jpg}" src="/images/developers/developer-1.jpg" alt="Portrait of Team Member 1, student developer" width="960" height="1280" loading="lazy" decoding="async"><span>01</span></div>
+                <div class="developer-card__info"><p class="eyebrow">Developer 01</p><h3>Team Member 1</h3><p>Student Developer</p></div>
+            </article>
+            <article class="developer-card reveal">
+                <div class="developer-card__photo"><img th:src="@{/images/developers/developer-2.jpg}" src="/images/developers/developer-2.jpg" alt="Portrait of Team Member 2, student developer" width="960" height="1280" loading="lazy" decoding="async"><span>02</span></div>
+                <div class="developer-card__info"><p class="eyebrow">Developer 02</p><h3>Team Member 2</h3><p>Student Developer</p></div>
+            </article>
+            <article class="developer-card reveal">
+                <div class="developer-card__photo"><img th:src="@{/images/developers/developer-3.jpg}" src="/images/developers/developer-3.jpg" alt="Portrait of Team Member 3, student developer" width="960" height="1280" loading="lazy" decoding="async"><span>03</span></div>
+                <div class="developer-card__info"><p class="eyebrow">Developer 03</p><h3>Team Member 3</h3><p>Student Developer</p></div>
+            </article>
+            <article class="developer-card reveal">
+                <div class="developer-card__photo"><img th:src="@{/images/developers/developer-4.jpg}" src="/images/developers/developer-4.jpg" alt="Portrait of Team Member 4, student developer" width="720" height="1280" loading="lazy" decoding="async"><span>04</span></div>
+                <div class="developer-card__info"><p class="eyebrow">Developer 04</p><h3>Team Member 4</h3><p>Student Developer</p></div>
+            </article>
+            <article class="developer-card reveal">
+                <div class="developer-card__photo"><img th:src="@{/images/developers/developer-5.jpg}" src="/images/developers/developer-5.jpg" alt="Portrait of Team Member 5, student developer" width="960" height="1280" loading="lazy" decoding="async"><span>05</span></div>
+                <div class="developer-card__info"><p class="eyebrow">Developer 05</p><h3>Team Member 5</h3><p>Student Developer</p></div>
+            </article>
+            <article class="developer-card reveal">
+                <div class="developer-card__photo"><img th:src="@{/images/developers/developer-6.jpg}" src="/images/developers/developer-6.jpg" alt="Portrait of Team Member 6, student developer" width="960" height="1280" loading="lazy" decoding="async"><span>06</span></div>
+                <div class="developer-card__info"><p class="eyebrow">Developer 06</p><h3>Team Member 6</h3><p>Student Developer</p></div>
+            </article>
+        </div>
+        <p class="developer-note">Replace the six sample names and add the matching team portraits in <code>static/images/developers/</code>.</p>
+    </section>
+
+    <section class="section about-back">
+        <p class="note">Historical background is based on the official LSPU historical development page. Individual exhibits identify sources and note information that still needs verification.</p>
+        <a class="btn btn--gold" th:href="@{/}" data-room>← Back to Museum</a>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' · LSPU Heritage Museum'">LSPU Heritage Museum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    <script>
+        /* Runs before the page paints: enables reveal animations and hides the entrance on repeat visits. */
+        (function () {
+            var d = document.documentElement; d.classList.add('js');
+            try { if (sessionStorage.getItem('lspuEntered') === '1' || location.search || location.hash) d.classList.add('skip-entrance'); } catch (e) {}
+        })();
+    </script>
+    <meta name="ctx" th:content="@{/}" content="/">
+    <link rel="stylesheet" th:href="@{/css/museum.css}">
+</head>
+<body>
+
+<!-- Museum navigation bar (not a dashboard sidebar) -->
+<header th:fragment="navbar(active)" class="nav" id="nav">
+    <a class="nav__brand" th:href="@{/}" data-room>
+        <span class="nav__mark" aria-hidden="true">L</span>
+        <span>LSPU <em>Heritage Museum</em></span>
+    </a>
+    <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+        <span class="sr-only">Open menu</span><i></i><i></i>
+    </button>
+    <nav class="nav__menu" id="navMenu" aria-label="Museum sections">
+        <a th:href="@{/}" data-room th:classappend="${active == 'lobby'} ? 'is-active'">Museum Lobby</a>
+        <a th:href="@{/#exhibitions}" data-room th:classappend="${active == 'exhibitions'} ? 'is-active'">Exhibitions</a>
+        <a th:href="@{/timeline}" data-room th:classappend="${active == 'timeline'} ? 'is-active'">Historical Timeline</a>
+        <a th:href="@{/navigator}" data-room th:classappend="${active == 'navigator'} ? 'is-active'">Campus Navigator</a>
+        <a th:href="@{/about}" data-room th:classappend="${active == 'about'} ? 'is-active'">About Us</a>
+        <form class="nav__search" th:action="@{/search}" method="get" role="search">
+            <label class="sr-only" for="navQ">Search the collection</label>
+            <input id="navQ" name="q" type="search" maxlength="60" placeholder="Search the collection"
+                   pattern="[\p{L}\p{N} .,'&amp;\-]{1,60}" title="Letters, numbers and spaces only">
+        </form>
+    </nav>
+    <span class="nav__indicator" id="navIndicator" aria-hidden="true"></span>
+</header>
+
+<footer th:fragment="footer" class="footer">
+    <p>LSPU Heritage Museum · A student project presenting the history of Laguna State Polytechnic University.</p>
+    <p class="footer__small">Information is compiled from lspu.edu.ph and secondary sources and marked where it still needs verification.
+        Photographs appear only when real, credited images are added.</p>
+</footer>
+
+<!-- Page-transition curtains (the "gallery doors") shared by every page -->
+<div th:fragment="doors" class="doors" id="doors" aria-hidden="true">
+    <div class="doors__panel doors__panel--left"></div>
+    <div class="doors__panel doors__panel--right"></div>
+    <div class="doors__label" id="doorsLabel"></div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script th:src="@{/js/museum.js}" defer></script>
+</th:block>
+</body>
+</html>

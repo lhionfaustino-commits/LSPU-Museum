@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Museum Lobby')}"></head>
+<body data-page="lobby">
+
+<!-- =============== 1. CINEMATIC ENTRANCE (skippable, plays once per visit) =============== -->
+<section class="entrance" id="entrance" aria-label="Museum entrance">
+    <div class="entrance__light" aria-hidden="true"></div>
+    <div class="entrance__facade" aria-hidden="true">
+        <div class="entrance__door entrance__door--left"></div>
+        <div class="entrance__door entrance__door--right"></div>
+        <div class="entrance__glow"></div>
+    </div>
+    <div class="entrance__content">
+        <svg class="entrance__logo" viewBox="0 0 80 80" aria-hidden="true">
+            <circle cx="40" cy="40" r="36" fill="none" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M14 56 H66 M18 56 V32 M30 56 V32 M42 56 V32 M54 56 V32 M62 56 V32 M12 32 L40 16 L68 32 Z"
+                  fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+        <p class="eyebrow entrance__eyebrow">Laguna State Polytechnic University</p>
+        <h1 class="entrance__title"><span>LSPU</span> <span>Heritage</span> <span>Museum</span></h1>
+        <p class="entrance__sub">Four campuses. One story, told room by room.</p>
+        <button class="btn btn--gold" id="enterBtn" type="button">Enter the Museum</button>
+        <button class="entrance__skip" id="skipBtn" type="button">Skip introduction</button>
+    </div>
+</section>
+
+<div th:replace="~{fragments/layout :: doors}"></div>
+<div th:replace="~{fragments/layout :: navbar('lobby')}"></div>
+
+<main id="lobby">
+    <!-- =============== 2. LOBBY HERO =============== -->
+    <section class="hero">
+        <div class="hero__bg" data-parallax aria-hidden="true"></div>
+        <div class="hero__inner">
+            <p class="eyebrow" data-split>Main Exhibition Hall</p>
+            <h2 class="display" data-split>The story of a university,<br>one campus at a time.</h2>
+            <p class="lead reveal">
+                Laguna State Polytechnic University began in 1952 as a provincial high school beside Laguna de Bay.
+                Today it has four regular campuses — Siniloan, Santa Cruz, Los Baños and San Pablo City. Walk into
+                any of the four galleries below to follow its history.
+            </p>
+            <a href="#exhibitions" class="btn btn--ghost reveal">Explore the Collections ↓</a>
+        </div>
+    </section>
+
+    <!-- =============== 3. FOUR EXHIBITION ENTRANCES =============== -->
+    <section class="section" id="exhibitions">
+        <header class="section__head">
+            <p class="eyebrow">The Collections</p>
+            <h2 class="title">Four Exhibition Entrances</h2>
+        </header>
+
+        <!-- Sorting is done by the JAVA backend (CampusSorter - Insertion Sort) -->
+        <form class="toolbar reveal" th:action="@{/}" method="get">
+            <label for="sort">Arrange the entrances by</label>
+            <select id="sort" name="sort" onchange="this.form.submit()">
+                <option value="" th:selected="${sort == ''}">Museum order (hallway)</option>
+                <option value="name" th:selected="${sort == 'name'}">Campus name (A–Z)</option>
+                <option value="year" th:selected="${sort == 'year'}">Founding year</option>
+                <option value="location" th:selected="${sort == 'location'}">Location (A–Z)</option>
+            </select>
+            <noscript><button class="btn btn--ghost" type="submit">Apply</button></noscript>
+        </form>
+
+        <div class="halls">
+            <a th:each="c, it : ${campuses}" class="exhibit reveal" data-room
+               th:href="@{/exhibition/{slug}(slug=${c.slug})}"
+               th:style="'--accent:' + ${c.accent}"
+               th:attr="data-label=${c.name}">
+                <div class="exhibit__media">
+                    <img th:if="${c.coverImage != null}" th:src="@{${c.coverImage.url}}"
+                         th:alt="${c.coverImage.title} + ' — ' + ${c.name}" loading="lazy">
+                    <div th:if="${c.coverImage == null}" class="exhibit__placeholder">
+                        <span>Photograph<br>pending</span>
+                    </div>
+                    <span class="exhibit__light" aria-hidden="true"></span>
+                </div>
+                <div class="exhibit__plaque">
+                    <p class="exhibit__no" th:text="'Room ' + ${it.count}">Room 1</p>
+                    <h3 class="exhibit__name" th:text="${c.name}">LSPU Siniloan</h3>
+                    <p class="exhibit__meta"><span th:text="'Est. ' + ${c.foundingYear}">Est. 1952</span> · <span th:text="${c.town}">Siniloan</span></p>
+                    <p class="exhibit__desc" th:text="${c.tagline}">Tagline</p>
+                    <span class="exhibit__cta">Explore Exhibition →</span>
+                </div>
+            </a>
+        </div>
+        <p class="note reveal">Founding years follow the official history page where it states them. Years marked “per secondary source”
+            inside each room still need confirmation from LSPU records.</p>
+    </section>
+
+    <!-- =============== 4. SEARCH TEASER =============== -->
+    <section class="section section--dark">
+        <header class="section__head">
+            <p class="eyebrow">Archive Search</p>
+            <h2 class="title">Search the Collection</h2>
+        </header>
+        <form class="bigsearch reveal" th:action="@{/search}" method="get" role="search">
+            <label class="sr-only" for="q">Search</label>
+            <input id="q" name="q" type="search" maxlength="60" required
+                   placeholder="Try “1983”, “fisheries”, “Bubukal” or “state college”"
+                   pattern="[\p{L}\p{N} .,'&amp;\-]{1,60}" title="Letters, numbers and spaces only (max 60)">
+            <button class="btn btn--gold" type="submit">Search</button>
+        </form>
+    </section>
+
+    <section class="section section--split">
+        <div class="reveal">
+            <p class="eyebrow">Continue your visit</p>
+            <h2 class="title">Walk the whole history</h2>
+            <p>See every campus milestone on one timeline, or open the map to see how the four campuses connect across Laguna.</p>
+        </div>
+        <div class="links reveal">
+            <a class="btn btn--gold" th:href="@{/timeline}" data-room>Historical Timeline</a>
+            <a class="btn btn--ghost" th:href="@{/navigator}" data-room>Campus Navigator</a>
+            <a class="btn btn--ghost" th:href="@{/about}" data-room>About LSPU</a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

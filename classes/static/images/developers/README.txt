@@ -1,0 +1,1 @@
+Add the six team portrait photos to this folder using these exact filenames:\ndeveloper-1.jpg\n developer-2.jpg\n developer-3.jpg\n developer-4.jpg\n developer-5.jpg\n developer-6.jpg\n\nThen update the six display names in templates/about.html (Team Member 1 through Team Member 6). Use photos the team has permission to publish. Recommended portrait ratio: 4:5.\n

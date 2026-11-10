@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Historical Timeline')}"></head>
+<body data-page="timeline">
+<div th:replace="~{fragments/layout :: doors}"></div>
+<div th:replace="~{fragments/layout :: navbar('timeline')}"></div>
+
+<main>
+    <section class="room-hero room-hero--short">
+        <div class="room-hero__bg" aria-hidden="true"></div>
+        <div class="room-hero__inner">
+            <p class="eyebrow" data-split>The Long Gallery</p>
+            <h1 class="display" data-split>Historical Timeline</h1>
+            <p class="lead reveal">Every milestone from all four campuses, arranged by year with our own Selection Sort algorithm.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="filters reveal" id="tlFilters" role="group" aria-label="Filter by campus">
+            <button type="button" class="chip is-active" data-filter="all">All campuses</button>
+            <button type="button" class="chip" th:each="c : ${campuses}" th:attr="data-filter=${c.slug}" th:text="${c.town}">Town</button>
+        </div>
+
+        <ol class="vtl">
+            <li class="vtl__item reveal" th:each="ev : ${events}" th:attr="data-campus=${ev.campusSlug}">
+                <span class="vtl__year" th:text="${ev.year}">1952</span>
+                <div class="vtl__body">
+                    <p class="eyebrow" th:text="${ev.dateLabel}"></p>
+                    <h3 th:text="${ev.title}"></h3>
+                    <p th:text="${ev.description}"></p>
+                    <p class="source">
+                        <a th:href="@{/exhibition/{s}(s=${ev.campusSlug})}" data-room th:text="${ev.campusSlug.replace('-', ' ')}">campus</a>
+                        · <span th:text="${ev.source}"></span>
+                        <strong class="flag" th:if="${ev.needsVerification}">Needs verification</strong>
+                    </p>
+                </div>
+            </li>
+        </ol>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

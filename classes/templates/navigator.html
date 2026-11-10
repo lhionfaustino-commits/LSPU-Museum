@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Campus Navigator')}"></head>
+<body data-page="navigator">
+<div th:replace="~{fragments/layout :: doors}"></div>
+<div th:replace="~{fragments/layout :: navbar('navigator')}"></div>
+
+<main>
+    <section class="room-hero room-hero--short">
+        <div class="room-hero__bg" aria-hidden="true"></div>
+        <div class="room-hero__inner">
+            <p class="eyebrow" data-split>The Map Room</p>
+            <h1 class="display" data-split>Campus Navigator</h1>
+            <p class="lead reveal">The four regular campuses plotted from their geographic coordinates, with the straight-line
+                distance between each pair calculated by the Java backend (Haversine formula).</p>
+        </div>
+    </section>
+
+    <section class="section nav-map">
+        <div class="map reveal">
+            <svg id="mapSvg" viewBox="0 0 700 520" role="img" aria-label="Topological map of the four LSPU campuses">
+                <defs>
+                    <radialGradient id="mapGlow" cx="50%" cy="50%" r="60%">
+                        <stop offset="0" stop-color="#C6A15B" stop-opacity=".18"/>
+                        <stop offset="1" stop-color="#C6A15B" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <rect width="700" height="520" fill="url(#mapGlow)"/>
+                <g id="mapLinks"></g>
+                <g id="mapNodes"></g>
+            </svg>
+            <p class="note">Positions use approximate town-centre coordinates (not exact campus gates), so relative placement is
+                accurate but exact campus points should be confirmed. Distances are straight lines, not road distances.</p>
+        </div>
+
+        <aside class="info" id="infoPanel" aria-live="polite">
+            <p class="eyebrow" id="infoKind">Select a campus</p>
+            <div class="info__photo" id="infoPhoto"></div>
+            <h2 id="infoName">Choose a campus on the map</h2>
+            <p id="infoMeta">Click any campus to see its location, founding year and links to its neighbours.</p>
+            <ul class="info__links" id="infoLinks"></ul>
+            <a class="btn btn--gold" id="infoGo" th:href="@{/}" data-room hidden>Enter this exhibition</a>
+        </aside>
+    </section>
+
+    <section class="section section--tint">
+        <header class="section__head"><p class="eyebrow">Or pick directly</p><h2 class="title">Campus list</h2></header>
+        <ul class="programs">
+            <li class="reveal" th:each="c : ${campuses}">
+                <a th:href="@{/exhibition/{s}(s=${c.slug})}" data-room th:attr="data-label=${c.name}"
+                   th:text="${c.name} + ' — ' + ${c.locationLabel}"></a>
+            </li>
+        </ul>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
